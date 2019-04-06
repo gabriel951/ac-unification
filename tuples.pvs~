@@ -1,0 +1,272 @@
+%%%%
+% Tuples.pvs
+% This file contain the implementation of functions to deal with tuples and also necessary lemmas
+% about those functions
+% obs: in this file the convention is that
+% IF the arguments of a term are t_1, ..., t_n THEN we start counting at 1 and finish in n.
+% The only function which start counting at 0 and goes to n-1 is function nth,
+% which is defined in the prelude of the PVS. 
+%%%
+
+tuples: THEORY
+BEGIN
+	IMPORTING nominal_term
+
+s, s1, t, t1: VAR term
+sym: VAR string 
+n, i: VAR nat
+
+lst_terms, lst_terms1, lst_terms2, arg: VAR list[term]
+lst_args: VAR list[list[term]]
+
+% a unification problem type is a list containing the two terms to be unified
+unif_prb_typ: TYPE = [term, term]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% In this first part we define functions num_arg_fun, select_nth and delete_nth
+
+% calculate the number of arguments a function (whose name is sym) 
+% this function takes into account associativity, so it should be called (initially) using only A and AC
+% function symbols
+num_arg_fun(t, sym): RECURSIVE nat =
+    IF pair?(t) THEN num_arg_fun(term1(t), sym) + num_arg_fun(term2(t), sym)
+    ELSIF ac_app?(t) AND ac_sym(t) = sym THEN num_arg_fun(ac_arg(t), sym)
+    ELSE 1
+    ENDIF
+MEASURE t BY << 
+
+% select the nth element of a function (whose name is sym)
+% index start at 1
+% the function returns the term and also a boolean, that indicates if it was possible to find
+% the nth element
+select_nth(n)(t, sym): RECURSIVE term =
+    IF pair?(t) THEN LET num_arg1 = num_arg_fun(term1(t), sym) IN
+      	       	     IF n <= num_arg1 THEN select_nth(n)(term1(t), sym)
+		     ELSE select_nth(n - num_arg1)(term2(t), sym)
+		     ENDIF
+    ELSIF ac_app?(t) AND ac_sym(t) = sym THEN select_nth(n)(ac_arg(t), sym)
+ELSE  t
+ENDIF
+MEASURE t BY <<
+
+% delete the nth element of a function (whose name is sym)
+% index start at 1 
+delete_nth(n)(t, sym): RECURSIVE term =
+IF pair?(t) THEN LET num_arg1 = num_arg_fun(term1(t), sym),
+   	    	     num_arg2 = num_arg_fun(term2(t), sym) IN
+		     IF n <= num_arg1 THEN
+		        IF num_arg1 = 1 THEN term2(t)
+			ELSE pair(delete_nth(n)(term1(t), sym), term2(t))
+			ENDIF
+		     ELSE
+		        IF num_arg2 = 1 THEN term1(t)
+			ELSE pair(term1(t), delete_nth(n - num_arg1)(term2(t), sym))
+			ENDIF
+		     ENDIF
+ELSIF ac_app?(t) AND ac_sym(t) = sym THEN IF num_arg_fun(t, sym) = 1 THEN unit
+					  ELSE ac_app(ac_sym(t), delete_nth(n)(ac_arg(t), sym))
+					  ENDIF 
+ELSE unit 
+ENDIF
+MEASURE t by <<
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% In this second part, we define the necessary functions for gen_pairs_order to work
+
+% extracts the first n arguments of an AC function symbol, putting them in a list
+extract_arg((n | n > 0), (t | ac_app?(t))): RECURSIVE list[term] =
+    IF n = 1 THEN (: (select_nth(n)(t, ac_sym(t))) :)
+    ELSE LET nth_elem_lst = (:(select_nth(n)(t, ac_sym(t))):) 
+     	     IN append(extract_arg(n - 1, t), nth_elem_lst)
+    ENDIF    
+MEASURE n 
+
+% split first ith terms of a list [t_1, ..., t_k] in position n,
+% the results are accumulated in lists lst_terms1 and lst_terms2.
+% lst_terms1 accumulates the terms t_1, ..., t_n
+% lst_terms2 accumulates the terms t_(n+1), ..., t_i
+% so, in the first call to this function, the list lst_terms1 and lst_terms2 should be null. 
+split_lst_terms_ith(lst_terms1, lst_terms2, (arg | NOT null?(arg)), (n| n > 0),
+(i | i > 0 AND i <= length(arg))):
+RECURSIVE [list[term], list[term]] =
+   IF i > n THEN split_lst_terms_ith(lst_terms1, cons(nth(arg, i - 1), lst_terms2), arg, n, i - 1)
+   ELSE IF i = 1 THEN (cons(nth(arg, 0), lst_terms1), lst_terms2)
+   	ELSE split_lst_terms_ith(cons(nth(arg, i -1), lst_terms1), lst_terms2, arg, n, i - 1)
+	ENDIF
+   ENDIF
+MEASURE i
+
+% split list of terms [t_1, ..., t_k] in position n, returns [l1, l2] where
+% l1 = [t_1, ..., t_n] and l2 = [t_(n+1), ..., t_k]
+split_lst_terms((arg| NOT null?(arg)), (n | n > 0)): [list[term], list[term]] =
+   split_lst_terms_ith((::), (::), arg, n, length(arg))
+
+% get all pairs formed by t and every term on the list of terms
+get_pairs_aux(t, lst_terms): RECURSIVE list[term] =
+   IF null?(lst_terms) THEN (::)
+   ELSE cons(pair(t, car(lst_terms)), get_pairs_aux(t, cdr(lst_terms))) 
+   ENDIF
+MEASURE lst_terms BY << 
+
+% combine pairings
+get_pairs(lst_terms1, lst_terms2): RECURSIVE list[term] =
+   IF null?(lst_terms1) THEN (::)
+   ELSE LET pairs_first_term = get_pairs_aux(car(lst_terms1), lst_terms2)
+   	    IN append(pairs_first_term, get_pairs(cdr(lst_terms1), lst_terms2))
+   ENDIF 	    
+MEASURE lst_terms1 BY <<
+ 
+% generate all pairings of a term (preserving the order) such that the most external
+% separator happen in position 1 or 2 or 3 or ... or nth
+% obs: if the separator happens in position "n" this means <(1, ..., n), (n + 1, ..., k)>
+gen_pairs_order_nth((arg | NOT null?(arg)), n): RECURSIVE list[term] =
+    IF length(arg) = 1 THEN arg
+    ELSE LET
+	    % get arguments from 1 to n in a variable and from n+1 to remaining terms in
+	    % another variable
+	    args_le_n = split_lst_terms(arg, n)`1,
+	    args_gt_n = split_lst_terms(arg, n)`2,
+	    % generate all possible pairings for term1 and term2
+	    pairings_term1 = gen_pairs_order_nth(args_le_n, length(args_le_n) - 1),
+	    pairings_term2 = gen_pairs_order_nth(args_gt_n, length(args_gt_n) - 1), 
+	    % combine all possible pairings for term1 with all possible pairings for term2
+	    % generating all the possible terms with most external separator in position n
+	    pairings_pos_n = get_pairs(pairings_term1, pairings_term2)
+	    IN  % if n = 1, we can't generate pairings in position below n
+	    	% else, we must generate pairings in position below n
+		IF n = 1 THEN pairings_pos_n
+		ELSE append(pairings_pos_n, gen_pairs_order_nth(arg, n-1)) 
+		ENDIF     
+    ENDIF 
+MEASURE n
+
+% generate all pairings of a term, preserving the order 
+gen_pairs_order((arg | NOT null?(arg))): list[term] =
+   gen_pairs_order_nth(arg, length(arg) - 1)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% In this third part, the necessary functions for gen_pairs_any_order to work
+
+% get list of arguments excluding the nth argument
+get_args_without_nth(arg, (n | n > 0)): RECURSIVE list[term] =
+   IF null?(arg) THEN (::)
+   ELSE IF n = 1 THEN cdr(arg)
+   	ELSE cons(car(arg), get_args_without_nth(cdr(arg), n - 1))
+	ENDIF 
+   ENDIF
+MEASURE n
+
+% add term in the beggining of every list of terms
+add_term_beg_lst_arg(t, lst_args): RECURSIVE list[list[term]] =
+   IF null?(lst_args) THEN (::)
+   ELSE cons(cons(t, car(lst_args)), add_term_beg_lst_arg(t, cdr(lst_args))) 
+   ENDIF 
+MEASURE lst_args BY << 
+
+% generate every possible order of arguments in which the
+% first element has index equal to or less than n
+gen_args_any_order_nth((arg | NOT null?(arg)), (n | n > 0 AND n <= length(arg))): RECURSIVE list[list[term]] = 
+    IF length(arg) = 1 THEN (:(arg):)
+    ELSE LET % select nth element - the function "nth" start counting at 0
+             nth_elem = nth(arg, n - 1),
+             % obtain arguments without nth element
+       	     new_arg = get_args_without_nth(arg, n), 
+       	     % gen every list with the nth element excluded
+       	     lst_args_without_nth = gen_args_any_order_nth(new_arg, length(new_arg)),
+       	     % add nth element in the beggining of every list of elements obtaining by excluding n 
+             lst_args_with_nth_beg = add_term_beg_lst_arg(nth_elem, lst_args_without_nth) IN  
+       	     % if n is 1, then return
+       	     IF n = 1 THEN lst_args_with_nth_beg
+       	     % else, recursively call function to generate the possible orders with
+       	     % first element equal to or less than n - 1
+       	     ELSE append(gen_args_any_order_nth(arg, n - 1), lst_args_with_nth_beg)
+       	     ENDIF
+    ENDIF
+MEASURE lex2(length(arg), n)  
+
+% apply the function gen pairs order to a list of arguments, returning a list with all the results
+apply_gen_pairs_order(lst_args): RECURSIVE list[term] =
+    IF null?(lst_args) THEN (::)
+    ELSE append(gen_pairs_order(car(lst_args)), apply_gen_pairs_order(cdr(lst_args)))
+    ENDIF
+MEASURE lst_args BY <<
+
+% generate all pairings of a term, in any order
+gen_pairs_any_order((arg | NOT null?(arg))): list[term] =
+   LET % generate every possible order of arguments
+       lst_args = gen_args_any_order_nth(arg, length(arg)) IN 
+       % generate all pairings of a term for every possible order
+       % by successively apply gen_pairs_order to every arg in lst_args
+       apply_gen_pairs_order(lst_args)
+       
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% In this final part, the function the nominal AC algorithm calls: generate_unif_prb
+
+% combine the term t with all terms in lst_terms
+combine_pairs_aux(t, lst_terms): RECURSIVE list[unif_prb_typ] =
+    IF null?(lst_terms) THEN (::)
+    ELSE cons((t, car(lst_terms)), combine_pairs_aux(t, cdr(lst_terms)))
+    ENDIF 
+MEASURE lst_terms BY <<
+
+% combine all possible pairings of term t with all possible pairings of term s,
+% obtaining all possible unification problems
+combine_pairs(lst_terms1, lst_terms2): RECURSIVE list[unif_prb_typ] =
+    IF null?(lst_terms1) THEN (::)
+    ELSE LET t = car(lst_terms1)
+    	     IN append(combine_pairs_aux(t, lst_terms2), combine_pairs(cdr(lst_terms1), lst_terms2))
+    ENDIF 
+MEASURE lst_terms1 BY <<
+
+% generate all possible unification problems relative to two function symbols
+% the 2 terms that you receive must be AC function symbols
+gen_unif_prb((t | ac_app?(t)), (s | ac_app?(s))): list[unif_prb_typ] = 
+    LET % extract arguments of both functions, put them in a list
+    	arg_t = extract_arg(num_arg_fun(t, ac_sym(t)), t), 
+    	arg_s = extract_arg(num_arg_fun(s, ac_sym(s)), s), 
+    	% generate all pairings of t - they preserve the order
+    	pairs_t_lst = gen_pairs_order(arg_t), 
+    	% generate all pairing of s - they can be in any order
+    	pairs_s_lst = gen_pairs_any_order(arg_s)
+    	% combine all pairings of t with all pairings of s, returning a list of all the possibilities  
+    	IN combine_pairs(pairs_t_lst, pairs_s_lst)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Important functions for lemmas
+% flattens an associative commutative function symbol into term.
+% If the AC function symbol has more than one term, a pair is returned,
+% without occurences of the function symbol 
+ac2pair(t, sym): RECURSIVE term =
+   IF ac_app?(t) THEN
+       IF num_arg_fun(t, sym) = 1 THEN select_nth(1)(t, sym)
+       ELSE pair(select_nth(1)(t, sym), ac2pair(delete_nth(1)(t, sym), sym))
+       ENDIF 
+   ELSE t
+   ENDIF 
+MEASURE t BY <<
+
+% get a term and flattens it to a list of terms that do not contain the mentioned AC symbol 
+term2list_withoutAC(t, sym): RECURSIVE list[term] =
+    IF ac_app?(t) AND ac_sym(t) = sym THEN extract_arg(num_arg_fun(t, ac_sym(t)), t)
+    ELSIF pair?(t) THEN append(term2list_withoutAC(term1(t), sym), term2list_withoutAC(term2(t), sym))
+    ELSE (:t:)
+    ENDIF 
+MEASURE t BY << 
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Important lemmas
+%
+split_membership_gen_unif_prb: CONJECTURE
+    member((t1, s1), gen_unif_prb(t, s)) IFF
+    (member(t1, gen_pairs_order(extract_arg(num_arg_fun(t, ac_sym(t)), t)))
+    AND
+    member(s1, gen_pairs_any_order(extract_arg(num_arg_fun(s, ac_sym(s)), s))))
+
+
+
+END tuples
+ 

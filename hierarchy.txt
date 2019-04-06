@@ -1,0 +1,14 @@
+My files hierarchy and other useful stuff
+
+                       nominal_unif 
+                            |
+                       substitution 
+                            | 
+                     alpha_equivalence
+                        /         \
+                       /           \
+                   freshness        tuples       
+                        \           /
+                        nominal_term
+                        
+                      

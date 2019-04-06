@@ -1,0 +1,267 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Authors: Ana Cristina Rocha Oliveira(*)
+%          Mauricio Ayala-Rincon(*)
+%          Maribel Fernandez(**)
+%          (*)Universidade de Brasilia, (**)King's College London
+% Last modified: 27 April 2015
+% This is the main subtheory of the theory Nominal Unification
+% Here, a functional specification of nominal unification is
+% given and formalised its soundness and correcteness.
+% 
+%                >>>> This is the top theory <<<<
+%
+% Comments reference Definitions, Lemmas and Theorems from the accompaining report
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+nominalunif: THEORY
+BEGIN
+	IMPORTING aux_nominal_unif,
+		  substitution,
+		  structure_extra[[variable,term]],
+		  atoms
+
+		  Delta, Delta1, Delta_sol, Delta_sol_aux, Nabla, Nabla1: VAR fresh_context
+		  sigma, sigma_sol, sigma_sol_aux, sigma1, gamma, theta, lambda1: VAR Sub
+		  t, s, u: VAR term
+		  X, Y: VAR variable
+		  a: VAR atom
+
+		  fix_pnt_eq: VAR fix_pnt_eq_typ                 
+		  fix_pnt_eq_lst, fix_pnt_eq_lst1, fix_pnt_eq_lst2, fix_pnt_eq_lst_sol,
+		  fix_pnt_eq_lst_sol_aux: VAR list[fix_pnt_eq_typ]
+		  unif_prb: VAR unif_prb_typ
+		  unif_prb_lst, unif_prb_lst1, unif_prb_lst2, unif_prb_lst_sol: VAR list[unif_prb_typ]
+		  nominal_sol: VAR nominal_sol_typ
+		  sol: VAR nominal_sol_typ
+		  sol_lst: VAR list[nominal_sol_typ]
+
+%%%%%%%%%% function to unify (modulo C) a list of terms 
+unify(Delta, sigma, unif_prb_lst, fix_pnt_eq_lst): RECURSIVE list[nominal_sol_typ] =
+% base case: if there is no problem left to unify, the solution given is good enough
+IF null?(unif_prb_lst) THEN (:(Delta, sigma, fix_pnt_eq_lst):)
+% start unifying first problem of the list
+ELSE
+    LET t = car(unif_prb_lst)`1, s = car(unif_prb_lst)`2
+    IN % we divide in cases
+	 IF susp?(s) AND NOT occurs(V(s), t) THEN LET
+	     % substitution that will be added 
+	     sigma1 = (: (V(s), ext(reverse(p(s)))(t) ) :),
+  	     % apply substitution to context and check if it is consistent
+	     (Delta1, bool1) = fresh_subs?(sigma1, Delta),
+	     % add new context to the old one we had
+	     new_Delta = append(Delta1, Delta), 
+	     % get new substitution list 
+	     new_sigma = append(sigma1, sigma), 
+	     % get new problem list - apply substitution to remaining problems and to fixpoint equations.
+	     % convert fixpoint equations back on unification problems
+	     unif_prb_lst1 = apply_sub_prb_lst(sigma1, cdr(unif_prb_lst)), 
+	     unif_prb_lst2 = apply_sub_prb_lst(sigma1, fix_pnt2unif_prb(fix_pnt_eq_lst)),
+	     new_unif_prb_lst = append(unif_prb_lst1, unif_prb_lst2)
+	     % output solution, take into account if context remain consistent
+	     IN IF bool1 THEN unify(new_Delta, new_sigma, new_unif_prb_lst, (::))
+		ELSE (::) 
+	        ENDIF
+         ELSE CASES t OF
+	     at(a): IF s = at(a) THEN unify(Delta, sigma, cdr(unif_prb_lst), fix_pnt_eq_lst) 
+      		    ELSE (::)
+		    ENDIF,
+				   
+	     *(pm, X): IF NOT occurs(X, s) THEN LET
+	     	       	    % this is the same as the case above where s is a suspension.
+	                    sigma1 = (: (X, ext(reverse(pm))(s) ) :),
+		   	    (Delta1, bool1) = fresh_subs?(sigma1, Delta),
+			    new_Delta = append(Delta1, Delta),
+			    new_sigma = append(sigma1, sigma), 
+			    unif_prb_lst1 = apply_sub_prb_lst(sigma1, cdr(unif_prb_lst)), 
+		     	    unif_prb_lst2 = apply_sub_prb_lst(sigma1, fix_pnt2unif_prb(fix_pnt_eq_lst)),
+		     	    new_unif_prb_lst = append(unif_prb_lst1, unif_prb_lst2)
+			    IN IF bool1 THEN unify(new_Delta, new_sigma, new_unif_prb_lst, (::))
+		       	       ELSE (::)
+			       ENDIF
+		       ELSIF susp?(s) AND occurs(X, s) THEN LET
+		       	     new_fix_pnt_eq = (:(append(reverse(p(s)), pm), X):),
+			     new_fix_pnt_eq_lst = append(new_fix_pnt_eq, fix_pnt_eq_lst)
+			     IN unify(Delta, sigma, cdr(unif_prb_lst), new_fix_pnt_eq_lst)
+		       ELSE (::) 
+		       ENDIF, 
+
+	     unit: IF s = unit THEN unify(Delta, sigma, cdr(unif_prb_lst), fix_pnt_eq_lst)
+		   ELSE (::)
+		   ENDIF,
+
+	     pair(t1, t2): IF NOT pair?(s) THEN (::)
+		           ELSE LET unif_prb1 = (:(t1, term1(s)):),
+			       	    	unif_prb2 = (:(t2, term2(s)):),
+			                new_unif_prb_lst = append(append(unif_prb1, unif_prb2), cdr(unif_prb_lst))
+			       	    IN  unify(Delta, sigma, new_unif_prb_lst, fix_pnt_eq_lst)
+			   ENDIF, 
+
+             abs(a, bd): IF NOT abs?(s) THEN (::)
+		 	 ELSIF a = abstr(s) THEN LET
+			       	   new_unif_prb = (:(bd, body(s)):),
+			     	   new_unif_prb_lst = append(new_unif_prb, cdr(unif_prb_lst))
+				   IN unify(Delta, sigma, new_unif_prb_lst, fix_pnt_eq_lst)
+		         ELSE LET
+			            % derives minimal context in which a is fresh in body(s) 
+			     	    (Delta1, bool1) = fresh?(a, body(s)),
+				    % new context under which we must unify the remaining problems 
+				    new_Delta = append(Delta1, Delta),
+				    % new problem to be unified
+				    new_unif_prb = (: (bd, ext((: (a, abstr(s)) :))(body(s))) :),
+				    new_unif_prb_lst = append(new_unif_prb, cdr(unif_prb_lst))
+				    % unify
+				    IN IF bool1 THEN unify(new_Delta, sigma, new_unif_prb_lst, fix_pnt_eq_lst)
+				       ELSE (::)
+				       ENDIF
+			     ENDIF,
+
+	     app(f, ag):   IF NOT app?(s) OR f /= sym(s) THEN (::)
+		 	   ELSE LET new_unif_prb = (:(ag, arg(s)):),
+			     	    new_unif_prb_lst = append(new_unif_prb, cdr(unif_prb_lst))
+				    IN unify(Delta, sigma, new_unif_prb_lst, fix_pnt_eq_lst)
+			   ENDIF,
+
+	     c_app(f, ag): IF (NOT c_app?(s)) OR (f /= c_sym(s)) THEN (::)
+			   ELSE LET
+			   	% solve problem, trying to unify (t1 with s1) and (t2 with s2)
+				unif_prb1_1 = (:(term1(ag), term1(c_arg(s))):),
+				unif_prb2_2 = (:(term2(ag), term2(c_arg(s))):),
+				unif_prb_lst1 = append(append(unif_prb1_1, unif_prb2_2), cdr(unif_prb_lst)),
+				sol1 = unify(Delta, sigma, unif_prb_lst1, fix_pnt_eq_lst),
+				% solve problem, trying to unify (t1 with s2) and (t2 with s1)
+				unif_prb1_2 = (:(term1(ag), term2(c_arg(s))):),
+				unif_prb2_1 = (:(term2(ag), term1(c_arg(s))):),
+				unif_prb_lst2 = append(append(unif_prb1_2, unif_prb2_1), cdr(unif_prb_lst)),
+				sol2 = unify(Delta, sigma, unif_prb_lst2, fix_pnt_eq_lst)
+				IN append(sol1, sol2) 
+			   ENDIF,
+	     ac_app(f, ag): IF (NOT ac_app?(s)) OR (f /= ac_sym(s)) THEN (::)
+		            ELSE LET
+			        % generates all possible unification problems to unify AC function symbols
+			       	extra_unif_prb = generate_unif_prb(t, s),		       	    	
+			       	% get list of parameters to call the function unify
+				lst_param2call_unify = get_lst_param2call_unify(extra_unif_prb, Delta,
+						       	sigma, cdr(unif_prb_lst), fix_pnt_eq_lst),
+				% use map to call function c_unify with all the possible paths
+				% obtaining a list of list of solutions
+				lst_lst_sol = map(LAMBDA (z1: {z: [fresh_context, Sub,
+					      	list[unif_prb_typ], list[fix_pnt_eq_typ]] |
+					lex2(card(vars_lst(append(z`3, fix_pnt2unif_prb(z`4)))),
+					  size_lst(z`3)) <
+					lex2(card(vars_lst(append(unif_prb_lst, fix_pnt2unif_prb(fix_pnt_eq_lst)))),
+					  size_lst(unif_prb_lst))}):
+						unify(z1))(lst_param2call_unify)
+				% flatten this sequence of list of list of solutions to simply a list of solutions
+				IN flatten_lst_results(lst_lst_sol)
+			    ENDIF 
+	        ENDCASES
+	    ENDIF
+ENDIF
+MEASURE lex2(card(vars_lst(append(unif_prb_lst, fix_pnt2unif_prb(fix_pnt_eq_lst)))), size_lst(unif_prb_lst))
+% lex 2 -> TODO? (number of variables in all problems, sum of depth of terms) 
+%%%%%%%%%% end of algorithm to perform c unification 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% auxiliar lemmas for soundness of the algorithm
+% TODO 
+%member_results_implies_member_call_unify:
+%    LET
+%
+%	IN (member((Delta_sol, sigma_sol, fix_pnt_eq_lst_sol), flatten_lst_results))
+%	   => (EXISTS unif_prb_lst AND fix_pnt_eq_lst:
+%	         member((Delta_sol, sigma_sol, fix_pnt_eq_lst_sol),
+%	         unify(Delta, sigma, unif_prb_lst, fix_pnt_eq_lst))
+%	         AND lex2(unif_prb_lst) < lex2(original)
+%	      )
+
+
+% lemma for AC functions
+unify_sound_aux_ac_app: LEMMA
+    (NOT null?(unif_prb_lst) AND t = car(unif_prb_lst)`1 AND s = car(unif_prb_lst)`2 AND 
+    ac_app?(s) AND
+    ac_sym(t) = ac_sym(s) AND
+    member((Delta_sol, sigma_sol, fix_pnt_eq_lst_sol),
+             flatten_lst_results(map(LAMBDA (z1:
+                                               {z:
+                                                  [fresh_context, Sub,
+                                                   list[unif_prb_typ],
+                                                   list[fix_pnt_eq_typ]] |
+                                                        lex2(card(vars_lst(append(z`3,
+                                                                                  fix_pnt2unif_prb(z`4)))),
+                                                             size_lst(z`3))
+                                                         <
+                                                         lex2(card(vars_lst(append(unif_prb_lst,
+                                                                                   fix_pnt2unif_prb(fix_pnt_eq_lst)))),
+                                                              size_lst(unif_prb_lst))}):
+                                       unify(z1))
+                                    (get_lst_param2call_unify(generate_unif_prb(t,
+                                                                                s),
+                                                              Delta, sigma,
+                                                              cdr(unif_prb_lst),
+                                                              fix_pnt_eq_lst)))) AND
+							      
+	(FORALL (y_1: list[unif_prb_typ], y_2: list[fix_pnt_eq_typ]):
+         FORALL (Delta_aux, Nabla_aux: fresh_context, sigma_aux, sigma1_aux: Sub, Delta_sol_aux,
+                sigma_sol_aux, fix_pnt_eq_lst_sol_aux):
+          lex2(card(vars_lst(append(y_1, fix_pnt2unif_prb(y_2)))),
+               size_lst(y_1))
+           <
+           lex2(card(vars_lst(append(unif_prb_lst, fix_pnt2unif_prb(fix_pnt_eq_lst)))),
+                size_lst(unif_prb_lst))
+           IMPLIES
+           (member((Delta_sol_aux, sigma_sol_aux, fix_pnt_eq_lst_sol_aux),
+                   unify(Delta_aux, sigma_aux, y_1, y_2))
+             AND
+             sol_prb_quad?(Nabla_aux, sigma1_aux)
+                          (Delta_sol_aux, sigma_sol_aux, (: :), fix_pnt_eq_lst_sol_aux)
+              AND valid_quadruple?(Delta_aux, sigma_aux, y_1, y_2))
+            => sol_prb_quad?(Nabla_aux, sigma1_aux)(Delta_aux, sigma_aux, y_1, y_2)
+	) AND
+
+    sol_prb_quad?(Nabla, sigma1)(Delta_sol, sigma_sol, (: :), fix_pnt_eq_lst_sol) AND 
+    valid_quadruple?(Delta, sigma, unif_prb_lst, fix_pnt_eq_lst)
+    )
+    => 
+    ( c_app?(t) OR app?(t) OR abs?(t) OR pair?(t) OR unit?(t) OR susp?(t) OR atom?(t)
+      OR (susp?(s) AND NOT occurs(V(t), s))
+      OR sol_prb_quad?(Nabla, sigma1)(Delta, sigma, unif_prb_lst, fix_pnt_eq_lst) 
+    )
+
+%%%%%%%%%% specification of soundness and completeness of the algorithm
+% soundness of unify - main theorem
+unify_sound: LEMMA  
+FORALL Delta_sol, sigma_sol, fix_pnt_eq_lst_sol:
+    (member((Delta_sol, sigma_sol, fix_pnt_eq_lst_sol), unify(Delta, sigma, unif_prb_lst, fix_pnt_eq_lst)) AND
+        sol_prb_quad?(Nabla, sigma1)(Delta_sol, sigma_sol, (::), fix_pnt_eq_lst_sol) AND
+	valid_quadruple?(Delta, sigma, unif_prb_lst, fix_pnt_eq_lst))
+	=> sol_prb_quad?(Nabla, sigma1)(Delta, sigma, unif_prb_lst, fix_pnt_eq_lst)
+
+% soundness of c unify for the initial call of the algorithm 
+c_unify_sound_cor: COROLLARY
+FORALL Delta_sol, sigma_sol, fix_pnt_eq_lst_sol:
+        (member((Delta_sol, sigma_sol, fix_pnt_eq_lst_sol), unify((::), (::), (:(t, s):), (::))) AND
+        sol_prb_quad?(Nabla, sigma1)(Delta_sol, sigma_sol, (::), fix_pnt_eq_lst_sol))
+	=> sol_prb_quad?(Nabla, sigma1)((::), (::), (:(t, s):), (::))
+
+% completeness of c unify - main theorem
+c_unify_complete: LEMMA
+    sol_prb_quad?(Nabla, sigma1)(Delta, sigma, unif_prb_lst, fix_pnt_eq_lst) AND
+    valid_quadruple?(Delta, sigma, unif_prb_lst, fix_pnt_eq_lst) =>
+    EXISTS Delta_sol, sigma_sol, fix_pnt_eq_lst_sol:
+       member((Delta_sol, sigma_sol, fix_pnt_eq_lst_sol), unify(Delta, sigma, unif_prb_lst, fix_pnt_eq_lst))
+	AND sol_prb_quad?(Nabla, sigma1)(Delta_sol, sigma_sol, (::), fix_pnt_eq_lst_sol)
+
+% completeness of c unify for the initial call of the algorithm 
+c_unify_complete_cor: COROLLARY
+    sol_prb_quad?(Nabla, sigma1)((::), (::), (:(t, s):), (::)) =>
+    EXISTS Delta_sol, sigma_sol, fix_pnt_eq_lst_sol:
+       member((Delta_sol, sigma_sol, fix_pnt_eq_lst_sol), unify((::), (::), (:(t, s):), (::)) )
+       AND sol_prb_quad?(Nabla, sigma1)(Delta_sol, sigma_sol, (::), fix_pnt_eq_lst_sol)
+
+
+%%%%%%%%%% end of specification of soundness and completeness of algorithm  
+
+
+
+END nominalunif
