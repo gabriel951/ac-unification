@@ -11,7 +11,8 @@
 tuples: THEORY
 BEGIN
 	IMPORTING nominal_term,
-                  structure_extra[term]
+                  structure_extra[term], 
+		  structure_extra[[term, term]]
 
 s, s1, t, t1, t2: VAR term
 sym: VAR string 
@@ -76,8 +77,9 @@ MEASURE t by <<
 % In this second part, we define the necessary functions for gen_pairs_order to work
 
 % extracts the first n arguments of an AC function symbol, putting them in a list
-extract_arg(n, (t | ac_app?(t))): RECURSIVE list[term] =
-    IF n = 0 THEN (::) 
+% should receive an AC function symbol
+extract_arg(n, t): RECURSIVE list[term] =
+    IF n = 0 OR NOT ac_app?(t) THEN (::) 
     ELSIF n = 1 THEN (: (select_nth(n)(t, ac_sym(t))) :)
     ELSE LET nth_elem_lst = (:(select_nth(n)(t, ac_sym(t))):) 
      	     IN append(extract_arg(n - 1, t), nth_elem_lst)
@@ -142,9 +144,11 @@ MEASURE lst_terms1 BY <<
 % generate all pairings of a term (preserving the order) such that the most external
 % separator happen in position 1 or 2 or 3 or ... or nth
 % obs: if the separator happens in position "n" this means <(1, ..., n), (n + 1, ..., k)>
+% n should be bigger than zero and less than length(arg), except when arg is an unitary list
+% therefore, the order of IF and ELSIF must be respected, as I painfully learned
 gen_pairs_order_nth(arg, n): RECURSIVE list[term] =
-    IF null?(arg) THEN (::) 
-    ELSIF length(arg) = 1 THEN arg
+    IF length(arg) = 1 THEN arg
+    ELSIF null?(arg) OR n = 0 OR n > length(arg) THEN (::) 
     ELSE LET
 	    % get arguments from 1 to n in a variable and from n+1 to remaining terms in
 	    % another variable
@@ -191,8 +195,9 @@ MEASURE lst_args BY <<
 
 % generate every possible order of arguments in which the
 % first element has index equal to or less than n
-gen_args_any_order_nth(arg, n): RECURSIVE list[list[term]] = 
-    IF null?(arg) OR n = 0 THEN (::) 
+% The order of the IF and ELSIF must be respected, as i painfully learned in practice!
+gen_args_any_order_nth(arg, n): RECURSIVE list[list[term]] =
+    IF null?(arg) OR n = 0 THEN (::)
     ELSIF length(arg) = 1 THEN (:(arg):)
     ELSE LET % select nth element - the function "nth" start counting at 0
              nth_elem = nth(arg, n - 1),
@@ -248,9 +253,10 @@ combine_pairs(lst_terms1, lst_terms2): RECURSIVE list[unif_prb_typ] =
 MEASURE lst_terms1 BY <<
 
 % generate all possible unification problems relative to two function symbols
-% the 2 terms that you receive must be AC function symbols
-gen_unif_prb((t | ac_app?(t)), (s | ac_app?(s))): list[unif_prb_typ] = 
-    LET % extract arguments of both functions, put them in a list
+% the 2 terms that you receive must be AC function symbols, else the function return null 
+gen_unif_prb(t, s): list[unif_prb_typ] =
+    IF ac_app?(t) AND ac_app?(s) THEN 
+        LET % extract arguments of both functions, put them in a list
     	arg_t = extract_arg(num_arg_fun(t, ac_sym(t)), t), 
     	arg_s = extract_arg(num_arg_fun(s, ac_sym(s)), s), 
     	% generate all pairings of t - they preserve the order
@@ -259,6 +265,8 @@ gen_unif_prb((t | ac_app?(t)), (s | ac_app?(s))): list[unif_prb_typ] =
     	pairs_s_lst = gen_pairs_any_order(arg_s)
     	% combine all pairings of t with all pairings of s, returning a list of all the possibilities  
     	IN combine_pairs(pairs_t_lst, pairs_s_lst)
+    ELSE (::) 
+    ENDIF
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%% Important functions for lemmas
@@ -276,20 +284,41 @@ ac2pair(t, sym): RECURSIVE term =
 MEASURE t BY <<
 
 % get a term and flattens it to a list of terms that do not contain the mentioned AC symbol 
-term2list_withoutAC(t, sym): RECURSIVE list[term] =
-    IF ac_app?(t) AND ac_sym(t) = sym THEN extract_arg(num_arg_fun(t, ac_sym(t)), t)
-    ELSIF pair?(t) THEN append(term2list_withoutAC(term1(t), sym), term2list_withoutAC(term2(t), sym))
-    ELSE (:t:)
-    ENDIF 
-MEASURE t BY <<
+%term2list_withoutAC(t, sym): RECURSIVE list[term] =
+%    IF ac_app?(t) AND ac_sym(t) = sym THEN extract_arg(num_arg_fun(t, ac_sym(t)), t)
+%    ELSIF pair?(t) THEN append(term2list_withoutAC(term1(t), sym), term2list_withoutAC(term2(t), sym))
+%    ELSE (:t:)
+%    ENDIF 
+%MEASURE t BY <<
 
 %%%%%%%%%%%%%%%%%%%%%%%%% Important lemmas
+% num_arg_fun always return something greater or equal than one
+num_arg_fun_ge_one: LEMMA 
+    num_arg_fun(t, sym) >= 1
+
+% the first element of extract arg is the first of select
+car_extract_arg_eq_select_first: LEMMA
+    ac_app?(t) AND n > 0 => 
+    car(extract_arg(n, t)) = select_nth(1)(t, ac_sym(t))
+
+% soundness of get_args_gt
 get_args_gt_is_sound: LEMMA
   arg2 = get_args_gt(append(arg1, arg2), length(arg1))
-  
+
+% sufficient condition for get_args_gt to return a non empty list
+suf_cond_get_args_gt_non_empty: LEMMA
+  NOT null?(arg) AND n < length(arg)
+  => NOT null?(get_args_gt(arg, n)) 
+
+% soundness of get_args_le
 get_args_le_is_sound: LEMMA  
   arg1 = get_args_le(append(arg1, arg2), length(arg1))
 
+% a sufficient condition for get_args_le to return a non empty list
+suf_cond_get_args_le_non_empty: LEMMA
+  NOT null?(arg) AND n > 0 => NOT null?(get_args_le(arg, n)) 
+  
+% aux lemma for the one below 
 suf_cond_pair_in_get_pairs_aux: LEMMA 
    member(t2, lst_terms2) =>
    member(pair(t1, t2), get_pairs_aux(t1, lst_terms2))
@@ -299,14 +328,30 @@ suf_cond_pair_in_get_pairs: LEMMA
     member(t1, lst_terms1) AND member(t2, lst_terms2)
     => member(pair(t1, t2), get_pairs(lst_terms1, lst_terms2))
 
-% TODO: this is almost done
-gen_pairs_nth_implies_gen_pairs_nth_above: CONJECTURE
-    NOT null?(arg) AND member(t, gen_pairs_order_nth(arg, n))
-    AND n <= i AND n > 0 AND i < length(arg) => 
+% 
+gen_pairs_nth_implies_gen_pairs_nth_above: CONJECTURE  
+    member(t, gen_pairs_order_nth(arg, n))
+    AND n <= i AND i < length(arg) => 
     member(t, gen_pairs_order_nth(arg, i))
 
+% aux lemma for the one below 
+combine_pairs_is_correct_aux: LEMMA 
+    member((t, s), combine_pairs_aux(t, lst_terms2))
+    IFF member(s, lst_terms2)
+
+% obvious aux lemma 
+combine_pairs_is_correct_aux2: LEMMA 
+    member((t, s), combine_pairs_aux(t1, lst_terms2))
+    => t1 = t
+    
 %
-split_membership_gen_unif_prb: CONJECTURE
+combine_pairs_is_correct: LEMMA 
+    member((t, s), combine_pairs(lst_terms1, lst_terms2)) IFF
+    member(t, lst_terms1)
+    AND member(s, lst_terms2)
+
+%
+split_membership_gen_unif_prb: LEMMA 
     member((t1, s1), gen_unif_prb(t, s)) IFF
     (member(t1, gen_pairs_order(extract_arg(num_arg_fun(t, ac_sym(t)), t)))
     AND
@@ -320,7 +365,6 @@ length_equal_num_arg_fun: LEMMA
 % gives a sufficient condition for a pair to be in gen_pairs_order, according to
 % term 1 and term 2
 suf_cond_pair_in_gen_pairs_order: CONJECTURE
-    NOT null?(arg1) AND NOT null?(arg2) AND 
     member(t1, gen_pairs_order(arg1)) AND member(t2, gen_pairs_order(arg2)) =>
     member(pair(t1, t2), gen_pairs_order(append(arg1, arg2)))
 

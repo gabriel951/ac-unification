@@ -26,5 +26,15 @@ BEGIN
 	     THEN nth(l1, i)
 	     ELSE nth(l2, i - length(l1))
       ENDIF      
-    
+
+ car_append: LEMMA 
+   NOT null?(l1) =>
+   car(append(l1, l2)) = car(l1)
+
+ cons_append: LEMMA
+   cons?(append(l1, l2)) = (cons?(l1) OR cons?(l2))
+
+ null_append: LEMMA
+   null?(append(l1, l2)) = (null?(l1) AND null?(l2))
+   
 END structure_extra

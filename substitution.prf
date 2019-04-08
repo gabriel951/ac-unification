@@ -4,8 +4,7 @@
    ((<< ADT-DEF-DECL "(strict_well_founded?[term])" |term_adt| NIL)
     (|variable| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -35,8 +34,7 @@
    ((<< ADT-DEF-DECL "(strict_well_founded?[term])" |term_adt| NIL)
     (|variable| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -68,8 +66,7 @@
      |real_props| NIL)
     (|variable| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -99,8 +96,7 @@
    ((<< ADT-DEF-DECL "(strict_well_founded?[term])" |term_adt| NIL)
     (|variable| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -132,8 +128,7 @@
     (|pair?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
     (|variable| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -165,8 +160,7 @@
     (|pair?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
     (|variable| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -191,6 +185,8 @@
     (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL))
    SHOSTAK))
+ (|subs_TCC7| 0
+  (|subs_TCC7-1| NIL 3763659503 ("" (TERMINATION-TCC) NIL NIL) NIL NIL))
  (|subs_perm_comm| 0
   (|subs_perm_comm-2| NIL 3745916610
    ("" (INDUCT "t")
@@ -227,12 +223,11 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
     (|term_induction| FORMULA-DECL NIL |term_adt| NIL)
-    (|ext| DEF-DECL "term" |nominal_term| NIL)
+    (|ext| DEF-DECL "{r: term | pair?(t) => pair?(r)}" |nominal_term| NIL)
     (|subs| DEF-DECL "term" |substitution| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL))
    NIL)
@@ -281,8 +276,7 @@
     NIL)
    ((|subs_perm_comm| FORMULA-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -308,7 +302,7 @@
     (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
     (|list_induction| FORMULA-DECL NIL |list_adt| NIL)
-    (|ext| DEF-DECL "term" |nominal_term| NIL)
+    (|ext| DEF-DECL "{r: term | pair?(t) => pair?(r)}" |nominal_term| NIL)
     (|Subs| DEF-DECL "term" |substitution| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL))
@@ -321,8 +315,7 @@
     (|subs| DEF-DECL "term" |substitution| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -362,8 +355,7 @@
    ("" (INDUCT "sigma") (("1" (GRIND) NIL NIL) ("2" (GRIND) NIL NIL)) NIL)
    ((|subs| DEF-DECL "term" |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -404,8 +396,7 @@
    ((|subs| DEF-DECL "term" |substitution| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -448,8 +439,7 @@
     (|subs| DEF-DECL "term" |substitution| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -490,8 +480,7 @@
    ((|subs| DEF-DECL "term" |substitution| NIL)
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -533,8 +522,7 @@
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (|variable| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -593,8 +581,7 @@
    ((|subs| DEF-DECL "term" |substitution| NIL)
     (|Subs_pair| FORMULA-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -624,8 +611,8 @@
     (|pair?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
     (|Subs| DEF-DECL "term" |substitution| NIL)
     (|pair| ADT-CONSTRUCTOR-DECL "[[term, term] -> (pair?)]" |term_adt| NIL)
-    (|c_app| ADT-CONSTRUCTOR-DECL "[[commutative_symbol, pair] -> (c_app?)]"
-     |term_adt| NIL)
+    (|c_app| ADT-CONSTRUCTOR-DECL "[[c_symbol, pair] -> (c_app?)]" |term_adt|
+     NIL)
     (|c_app?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
     (|pair| TYPE-EQ-DECL NIL |term_adt| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL))
@@ -635,8 +622,7 @@
    ("" (INDUCT "sigma") (("1" (GRIND) NIL NIL) ("2" (GRIND) NIL NIL)) NIL)
    ((NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -705,8 +691,7 @@
     NIL)
    ((|subs| DEF-DECL "term" |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -733,7 +718,7 @@
     (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
     (|list_induction| FORMULA-DECL NIL |list_adt| NIL)
     (|Subs| DEF-DECL "term" |substitution| NIL)
-    (|ord| CONST-DECL "upto(6)" |term_adt| NIL)
+    (|ord| CONST-DECL "upto(7)" |term_adt| NIL)
     (|upto| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (<= CONST-DECL "bool" |reals| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
@@ -891,8 +876,7 @@
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL))
    NIL)
@@ -1003,8 +987,7 @@
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -1051,8 +1034,7 @@
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -1120,8 +1102,7 @@
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -1198,8 +1179,7 @@
     (|fresh_subs?| DEF-DECL "[fresh_context, bool]" |substitution| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -1306,8 +1286,7 @@
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -1438,8 +1417,7 @@
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -1596,8 +1574,7 @@
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -1850,8 +1827,7 @@
       NIL))
     NIL)
    ((|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|fresh_context| TYPE-EQ-DECL NIL |freshness| NIL)
@@ -1897,7 +1873,7 @@
     (|reverse| DEF-DECL "list[T]" |list_props| NIL)
     (|act| DEF-DECL "atom" |atoms| NIL)
     (|fresh_subs?_is_fresh| FORMULA-DECL NIL |substitution| NIL)
-    (|ext| DEF-DECL "term" |nominal_term| NIL)
+    (|ext| DEF-DECL "{r: term | pair?(t) => pair?(r)}" |nominal_term| NIL)
     (|Subs_unit| FORMULA-DECL NIL |substitution| NIL)
     (|Subs_pair| FORMULA-DECL NIL |substitution| NIL)
     (|Subs_abs| FORMULA-DECL NIL |substitution| NIL)
@@ -2109,7 +2085,7 @@
       NIL))
     NIL)
    ((|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
@@ -2154,7 +2130,7 @@
     (|ext_reverse_fresh?| FORMULA-DECL NIL |freshness| NIL)
     (FALSE CONST-DECL "bool" |booleans| NIL)
     (|not_fresh_is_null| FORMULA-DECL NIL |freshness| NIL)
-    (|ext| DEF-DECL "term" |nominal_term| NIL)
+    (|ext| DEF-DECL "{r: term | pair?(t) => pair?(r)}" |nominal_term| NIL)
     (|Subs_perm_comm| FORMULA-DECL NIL |substitution| NIL)
     (|reverse| DEF-DECL "list[T]" |list_props| NIL)
     (|act| DEF-DECL "atom" |atoms| NIL)
@@ -2368,7 +2344,7 @@
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
@@ -2776,11 +2752,11 @@
     (|alpha_fresh_invariance| FORMULA-DECL NIL |alpha_equivalence| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|append_null| FORMULA-DECL NIL |list_props| NIL)
-    (|ext| DEF-DECL "term" |nominal_term| NIL)
+    (|ext| DEF-DECL "{r: term | pair?(t) => pair?(r)}" |nominal_term| NIL)
     (|subs_perm_comm| FORMULA-DECL NIL |substitution| NIL)
     (|susp?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
     (* ADT-CONSTRUCTOR-DECL "[[perm, variable] -> (susp?)]" |term_adt| NIL)
-    (|pair?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL) NIL
+    (|pair?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
     (|term2| ADT-ACCESSOR-DECL "[pair -> term]" |term_adt| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
@@ -2794,10 +2770,10 @@
     (|abstr| ADT-ACCESSOR-DECL "[(abs?) -> atom]" |term_adt| NIL)
     (|fresh_subs?_is_fresh2| FORMULA-DECL NIL |substitution| NIL)
     (|term_app_eta| FORMULA-DECL NIL |term_adt| NIL)
-    (|arg| ADT-ACCESSOR-DECL "[(app?) -> term]" |term_adt| NIL) NIL
+    (|arg| ADT-ACCESSOR-DECL "[(app?) -> term]" |term_adt| NIL)
     (|app?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
     (|term_c_app_eta| FORMULA-DECL NIL |term_adt| NIL)
-    (|c_arg| ADT-ACCESSOR-DECL "[(c_app?) -> pair]" |term_adt| NIL) NIL
+    (|c_arg| ADT-ACCESSOR-DECL "[(c_app?) -> pair]" |term_adt| NIL)
     (|c_app?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
     (|pred| TYPE-EQ-DECL NIL |defined_types| NIL)
     (|well_founded?| CONST-DECL "bool" |orders| NIL)
@@ -2806,7 +2782,7 @@
     (|naturalnumber| TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (|variable| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -3116,7 +3092,7 @@
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|fresh_subs?_null| FORMULA-DECL NIL |substitution| NIL)
@@ -3238,7 +3214,7 @@
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
@@ -3394,7 +3370,7 @@
     (|fresh_subs?| DEF-DECL "[fresh_context, bool]" |substitution| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -3689,7 +3665,7 @@
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
@@ -3953,7 +3929,7 @@
      ("7" (GRIND) NIL NIL))
     NIL)
    ((|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
@@ -4045,7 +4021,7 @@
     (|occurs| DEF-DECL "bool" |nominal_term| NIL)
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL))
    NIL)
@@ -4163,7 +4139,7 @@
     (|occurs| DEF-DECL "bool" |nominal_term| NIL)
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL))
    NIL)
@@ -4958,14 +4934,12 @@
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|Vars_in| CONST-DECL "bool" |substitution| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
-    (|Subs| DEF-DECL "term" |substitution| NIL)
-    (|every| ADT-DEF-DECL "boolean" |list_adt| NIL)
+    (|Subs| DEF-DECL "term" |substitution| NIL) NIL
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|occurs| DEF-DECL "bool" |nominal_term| NIL)
     (|Subs_unif| TYPE-EQ-DECL NIL |substitution| NIL)
@@ -5126,7 +5100,7 @@
       NIL))
     NIL)
    ((|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
@@ -5235,7 +5209,7 @@
       NIL))
     NIL)
    ((|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
@@ -5410,7 +5384,7 @@
       NIL))
     NIL)
    ((|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
@@ -5450,7 +5424,7 @@
     (|null| ADT-CONSTRUCTOR-DECL "(null?)" |list_adt| NIL)
     (|null?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
     (|Subs_perm_comm| FORMULA-DECL NIL |substitution| NIL)
-    (|ext| DEF-DECL "term" |nominal_term| NIL)
+    (|ext| DEF-DECL "{r: term | pair?(t) => pair?(r)}" |nominal_term| NIL)
     (|append_null| FORMULA-DECL NIL |list_props| NIL)
     (|real_le_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
@@ -5728,8 +5702,7 @@
     NIL)
    ((|c_app?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
     (|c_arg| ADT-ACCESSOR-DECL "[(c_app?) -> pair]" |term_adt| NIL)
-    (|c_sym| ADT-ACCESSOR-DECL "[(c_app?) -> commutative_symbol]" |term_adt|
-     NIL)
+    (|c_sym| ADT-ACCESSOR-DECL "[(c_app?) -> c_symbol]" |term_adt| NIL)
     (|Subs_c_app| FORMULA-DECL NIL |substitution| NIL)
     (|real_le_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
@@ -5772,7 +5745,7 @@
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|variable| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -5936,7 +5909,7 @@
     (* ADT-CONSTRUCTOR-DECL "[[perm, variable] -> (susp?)]" |term_adt| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -6023,7 +5996,7 @@
       NIL))
     NIL)
    ((|alpha| DEF-DECL "bool" |alpha_equivalence| NIL)
-    (|ord| CONST-DECL "upto(6)" |term_adt| NIL)
+    (|ord| CONST-DECL "upto(7)" |term_adt| NIL)
     (|Subs_ord| FORMULA-DECL NIL |substitution| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (* ADT-CONSTRUCTOR-DECL "[[perm, variable] -> (susp?)]" |term_adt| NIL)
@@ -6036,7 +6009,7 @@
     (|susp?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
     (|variable| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -6236,7 +6209,7 @@
       NIL))
     NIL)
    ((|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|fresh_context| TYPE-EQ-DECL NIL |freshness| NIL)
@@ -6275,7 +6248,7 @@
     (|Subs_perm_comm| FORMULA-DECL NIL |substitution| NIL)
     (|ext_preserves_alpha| FORMULA-DECL NIL |alpha_equivalence| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
-    (|ext| DEF-DECL "term" |nominal_term| NIL)
+    (|ext| DEF-DECL "{r: term | pair?(t) => pair?(r)}" |nominal_term| NIL)
     (|Subs_unit| FORMULA-DECL NIL |substitution| NIL)
     (|Subs_pair| FORMULA-DECL NIL |substitution| NIL)
     (|Subs_abs| FORMULA-DECL NIL |substitution| NIL)
@@ -6505,8 +6478,7 @@
     (|char| TYPE-EQ-DECL NIL |strings| NIL)
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
-    (|term| TYPE-DECL NIL |term_adt| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (|term| TYPE-DECL NIL |term_adt| NIL) NIL
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|variable| TYPE-EQ-DECL NIL |nominal_term| NIL))
@@ -6535,8 +6507,7 @@
     (|char| TYPE-EQ-DECL NIL |strings| NIL)
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
-    (|term| TYPE-DECL NIL |term_adt| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (|term| TYPE-DECL NIL |term_adt| NIL) NIL
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|variable| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -6579,15 +6550,14 @@
       NIL))
     NIL)
    ((|append_null| FORMULA-DECL NIL |list_props| NIL)
-    (|ext| DEF-DECL "term" |nominal_term| NIL)
+    (|ext| DEF-DECL "{r: term | pair?(t) => pair?(r)}" |nominal_term| NIL)
     (|null| ADT-CONSTRUCTOR-DECL "(null?)" |list_adt| NIL)
     (|null?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
     (* ADT-CONSTRUCTOR-DECL "[[perm, variable] -> (susp?)]" |term_adt| NIL)
     (|susp?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -6647,8 +6617,7 @@
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
@@ -6706,8 +6675,7 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|emptyset| CONST-DECL "set" |sets| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -6812,8 +6780,7 @@
     (|member| CONST-DECL "bool" |sets| NIL) (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL))
    SHOSTAK))
@@ -6858,8 +6825,7 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (|emptyset| CONST-DECL "set" |sets| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -7070,8 +7036,7 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL))
    SHOSTAK))
@@ -7116,8 +7081,7 @@
     (|var_not_sub_aux| FORMULA-DECL NIL |substitution| NIL)
     (|emptyset| CONST-DECL "set" |sets| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -7250,8 +7214,7 @@
       NIL))
     NIL)
    ((|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
@@ -7460,8 +7423,7 @@
     (|member| CONST-DECL "bool" |sets| NIL) (|set| TYPE-EQ-DECL NIL |sets| NIL)
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL))
    SHOSTAK))
@@ -7706,8 +7668,7 @@
     (|member| CONST-DECL "bool" |sets| NIL)
     (|emptyset| CONST-DECL "set" |sets| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -7904,16 +7865,12 @@
       NIL))
     NIL)
    ((|idempotent?| CONST-DECL "bool" |substitution| NIL)
-    (|sub_skip_term| FORMULA-DECL NIL |substitution| NIL)
-    (|t1| SKOLEM-CONST-DECL
-     "term[atom, perm, variable, symbol, commutative_symbol]" |substitution|
-     NIL)
+    (|sub_skip_term| FORMULA-DECL NIL |substitution| NIL) NIL
     (|suf_cond_idempotent_aux| FORMULA-DECL NIL |substitution| NIL)
     (|Subs| DEF-DECL "term" |substitution| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|variable| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
@@ -8078,8 +8035,7 @@
     NIL)
    ((|idempotent?| CONST-DECL "bool" |substitution| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
@@ -8186,8 +8142,7 @@
     (|Subs| DEF-DECL "term" |substitution| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -8476,8 +8431,7 @@
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL))
    SHOSTAK))
@@ -8603,8 +8557,7 @@
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
@@ -8813,8 +8766,7 @@
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL))
    SHOSTAK))
@@ -8982,8 +8934,7 @@
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
@@ -9052,8 +9003,7 @@
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|member| CONST-DECL "bool" |sets| NIL)
@@ -9150,7 +9100,7 @@
     (|null| ADT-CONSTRUCTOR-DECL "(null?)" |list_adt| NIL)
     (|Subs| DEF-DECL "term" |substitution| NIL)
     (|reverse| DEF-DECL "list[T]" |list_props| NIL)
-    (|ext| DEF-DECL "term" |nominal_term| NIL)
+    (|ext| DEF-DECL "{r: term | pair?(t) => pair?(r)}" |nominal_term| NIL)
     (|ext_identity| FORMULA-DECL NIL |nominal_term| NIL)
     (|fresh_context| TYPE-EQ-DECL NIL |freshness| NIL)
     (|alpha_symmetric| FORMULA-DECL NIL |alpha_equivalence| NIL)
@@ -9161,8 +9111,7 @@
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -9327,8 +9276,7 @@
     (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
-    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL) NIL
     (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
@@ -9574,13 +9522,7 @@
     (|pair| ADT-CONSTRUCTOR-DECL "[[term, term] -> (pair?)]" |term_adt| NIL)
     (|term1| ADT-ACCESSOR-DECL "[pair -> term]" |term_adt| NIL)
     (|term2| ADT-ACCESSOR-DECL "[pair -> term]" |term_adt| NIL)
-    (|Subs_app| FORMULA-DECL NIL |substitution| NIL)
-    (|ag| SKOLEM-CONST-DECL
-     "term[atom, perm, variable, symbol, commutative_symbol]" |substitution|
-     NIL)
-    (|abs2_var| SKOLEM-CONST-DECL
-     "term[atom, perm, variable, symbol, commutative_symbol]" |substitution|
-     NIL)
+    (|Subs_app| FORMULA-DECL NIL |substitution| NIL) NIL NIL
     (|Subs_abs| FORMULA-DECL NIL |substitution| NIL)
     (|term_times_eta| FORMULA-DECL NIL |term_adt| NIL)
     (|p| ADT-ACCESSOR-DECL "[(susp?) -> perm]" |term_adt| NIL)
@@ -9591,18 +9533,12 @@
     (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
     (|nonempty_singleton_finite| APPLICATION-JUDGEMENT "non_empty_finite_set"
      |finite_sets| NIL)
-    (|Subs_perm_Var_aux| FORMULA-DECL NIL |substitution| NIL)
-    (|p1| SKOLEM-CONST-DECL
-     "term[atom, perm, variable, symbol, commutative_symbol]" |substitution|
-     NIL)
+    (|Subs_perm_Var_aux| FORMULA-DECL NIL |substitution| NIL) NIL
     (|real_gt_is_strict_total_order| NAME-JUDGEMENT
      "(strict_total_order?[real])" |real_props| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
      NIL)
-    (|p2| SKOLEM-CONST-DECL
-     "term[atom, perm, variable, symbol, commutative_symbol]" |substitution|
-     NIL)
-    (|union| CONST-DECL "set" |sets| NIL)
+    NIL (|union| CONST-DECL "set" |sets| NIL)
     (|Subs_pair| FORMULA-DECL NIL |substitution| NIL)
     (|singleton| CONST-DECL "(singleton?)" |sets| NIL)
     (|emptyset| CONST-DECL "set" |sets| NIL)
@@ -9642,8 +9578,7 @@
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL))
    SHOSTAK))
@@ -9751,8 +9686,8 @@
     NIL)
    ((|pair| TYPE-EQ-DECL NIL |term_adt| NIL)
     (|c_app?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
-    (|c_app| ADT-CONSTRUCTOR-DECL "[[commutative_symbol, pair] -> (c_app?)]"
-     |term_adt| NIL)
+    (|c_app| ADT-CONSTRUCTOR-DECL "[[c_symbol, pair] -> (c_app?)]" |term_adt|
+     NIL)
     (|app| ADT-CONSTRUCTOR-DECL "[[symbol, term] -> (app?)]" |term_adt| NIL)
     (|app?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
     (|abs?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
@@ -9800,8 +9735,7 @@
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (|fresh_context| TYPE-EQ-DECL NIL |freshness| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL))
    SHOSTAK))
@@ -9957,8 +9891,7 @@
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (|fresh_context| TYPE-EQ-DECL NIL |freshness| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL))
    SHOSTAK))
@@ -10333,15 +10266,10 @@
     (|p| ADT-ACCESSOR-DECL "[(susp?) -> perm]" |term_adt| NIL)
     (|reverse| DEF-DECL "list[T]" |list_props| NIL)
     (|act| DEF-DECL "atom" |atoms| NIL)
-    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
-    (|a1| SKOLEM-CONST-DECL "atom" |substitution| NIL)
+    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL) NIL
     (|act_reverse_pi| FORMULA-DECL NIL |atoms| NIL)
     (|set| TYPE-EQ-DECL NIL |sets| NIL)
-    (|ds| CONST-DECL "set[atom]" |atoms| NIL)
-    (|pm| SKOLEM-CONST-DECL "perm" |substitution| NIL)
-    (|s| SKOLEM-CONST-DECL
-     "term[atom, perm, variable, symbol, commutative_symbol]" |substitution|
-     NIL)
+    (|ds| CONST-DECL "set[atom]" |atoms| NIL) NIL NIL
     (|act_reverse2| FORMULA-DECL NIL |atoms| NIL)
     (|susp?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
     (|pair?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
@@ -10359,21 +10287,15 @@
     (|abstr| ADT-ACCESSOR-DECL "[(abs?) -> atom]" |term_adt| NIL)
     (|cons| ADT-CONSTRUCTOR-DECL "[[T, list] -> (cons?)]" |list_adt| NIL)
     (|cons?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
-    (|ext| DEF-DECL "term" |nominal_term| NIL)
+    (|ext| DEF-DECL "{r: term | pair?(t) => pair?(r)}" |nominal_term| NIL)
     (|ext_preserves_fresh| FORMULA-DECL NIL |freshness| NIL)
-    (|body| ADT-ACCESSOR-DECL "[(abs?) -> term]" |term_adt| NIL)
-    (|s| SKOLEM-CONST-DECL
-     "term[atom, perm, variable, symbol, commutative_symbol]" |substitution|
-     NIL)
+    (|body| ADT-ACCESSOR-DECL "[(abs?) -> term]" |term_adt| NIL) NIL
     (|abs?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
     (|app?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
     (|arg| ADT-ACCESSOR-DECL "[(app?) -> term]" |term_adt| NIL)
     (|term_app_eta| FORMULA-DECL NIL |term_adt| NIL)
     (|c_app?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
-    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
-    (|s| SKOLEM-CONST-DECL
-     "term[atom, perm, variable, symbol, commutative_symbol]" |substitution|
-     NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL) NIL
     (|c_arg| ADT-ACCESSOR-DECL "[(c_app?) -> pair]" |term_adt| NIL)
     (|term_c_app_eta| FORMULA-DECL NIL |term_adt| NIL)
     (|pred| TYPE-EQ-DECL NIL |defined_types| NIL)
@@ -10383,8 +10305,7 @@
     (|naturalnumber| TYPE-EQ-DECL NIL |naturalnumbers| NIL)
     (|variable| TYPE-EQ-DECL NIL |nominal_term| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -10618,7 +10539,7 @@
     (|Subs_perm_comm| FORMULA-DECL NIL |substitution| NIL)
     (|null| ADT-CONSTRUCTOR-DECL "(null?)" |list_adt| NIL)
     (|null?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
-    (|ext| DEF-DECL "term" |nominal_term| NIL)
+    (|ext| DEF-DECL "{r: term | pair?(t) => pair?(r)}" |nominal_term| NIL)
     (|act| DEF-DECL "atom" |atoms| NIL)
     (|alpha_ext_invariance_right| FORMULA-DECL NIL |alpha_equivalence| NIL)
     (|append_null| FORMULA-DECL NIL |list_props| NIL)
@@ -10659,8 +10580,7 @@
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (|fresh_context| TYPE-EQ-DECL NIL |freshness| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL))
    SHOSTAK))
@@ -10886,8 +10806,7 @@
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -11028,8 +10947,7 @@
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (|fresh_context| TYPE-EQ-DECL NIL |freshness| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL))
    SHOSTAK))
@@ -11126,8 +11044,7 @@
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|Sub| TYPE-EQ-DECL NIL |substitution| NIL)
     (TRUE CONST-DECL "bool" |booleans| NIL)
-    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
-    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL) NIL
     (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
     (|term| TYPE-DECL NIL |term_adt| NIL)
     (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
@@ -11140,5 +11057,46 @@
     (|perm| TYPE-EQ-DECL NIL |atoms| NIL)
     (|fresh_context| TYPE-EQ-DECL NIL |freshness| NIL)
     (|list| TYPE-DECL NIL |list_adt| NIL))
+   SHOSTAK))
+ (|ord_pair_susp| 0
+  (|ord_pair_susp-1| NIL 3763659503
+   ("" (INDUCT "t")
+    (("1" (GRIND) NIL NIL) ("2" (GRIND) NIL NIL) ("3" (GRIND) NIL NIL)
+     ("4" (GRIND) NIL NIL) ("5" (GRIND) NIL NIL) ("6" (GRIND) NIL NIL)
+     ("7" (GRIND) NIL NIL) ("8" (GRIND) NIL NIL))
+    NIL)
+   ((|ac_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
+    (|commutative_symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
+    (|symbol| TYPE-EQ-DECL NIL |nominal_term| NIL)
+    (|char| TYPE-EQ-DECL NIL |strings| NIL)
+    (|char?| ADT-RECOGNIZER-DECL "[character -> boolean]" |character_adt| NIL)
+    (|character| TYPE-DECL NIL |character_adt| NIL)
+    (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
+    (|nat| NONEMPTY-TYPE-EQ-DECL NIL |naturalnumbers| NIL)
+    (|variable| TYPE-EQ-DECL NIL |nominal_term| NIL)
+    (|perm| TYPE-EQ-DECL NIL |atoms| NIL) (|list| TYPE-DECL NIL |list_adt| NIL)
+    (|atom| TYPE-EQ-DECL NIL |atoms| NIL) (>= CONST-DECL "bool" |reals| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (|int| NONEMPTY-TYPE-EQ-DECL NIL |integers| NIL)
+    (|integer_pred| CONST-DECL "[rational -> boolean]" |integers| NIL)
+    (|rational| NONEMPTY-TYPE-FROM-DECL NIL |rationals| NIL)
+    (|rational_pred| CONST-DECL "[real -> boolean]" |rationals| NIL)
+    (|real| NONEMPTY-TYPE-FROM-DECL NIL |reals| NIL)
+    (|real_pred| CONST-DECL "[number_field -> boolean]" |reals| NIL)
+    (|number_field| NONEMPTY-TYPE-FROM-DECL NIL |number_fields| NIL)
+    (|number_field_pred| CONST-DECL "[number -> boolean]" |number_fields| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|number| NONEMPTY-TYPE-DECL NIL |numbers| NIL)
+    (|term_induction| FORMULA-DECL NIL |term_adt| NIL)
+    (|susp?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|subs| DEF-DECL "term" |substitution| NIL)
+    (|pair?| ADT-RECOGNIZER-DECL "[term -> boolean]" |term_adt| NIL)
+    (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (TRUE CONST-DECL "bool" |booleans| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|every| ADT-DEF-DECL "boolean" |term_adt| NIL)
+    (PRED TYPE-EQ-DECL NIL |defined_types| NIL)
+    (|term| TYPE-DECL NIL |term_adt| NIL))
    SHOSTAK)))
 

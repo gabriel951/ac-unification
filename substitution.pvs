@@ -530,4 +530,9 @@ aux_lemma_fresh_sub2: LEMMA
    fresh_subs(Nabla)(sigma, Delta) AND more_gen_sub?(Nabla)(gamma, sigma) AND idempotent?(gamma) 
    => fresh_subs?(gamma, Delta)`2
 
+
+%%%%%%%%%%%%%%%%%%%%%%% lemmas to prove AC
+ord_pair_susp: LEMMA
+    pair?(subs(X, s)(t)) => susp?(t) OR pair?(t)
+
 END substitution

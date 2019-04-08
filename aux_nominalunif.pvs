@@ -136,12 +136,12 @@ MEASURE lst_lst_sol BY <<
 
 % apply a substitution X -> u to arg, the arguments of an AC function t
 % flattens the results
-apply_subs_arg(X, u)(arg, (t | ac_app?(t))): RECURSIVE list[term] =
-   IF null?(arg) THEN (::)
-   ELSE LET s = subs(X, u)(car(arg)) IN
-   	    append(term2list_withoutAC(s, ac_sym(t)), apply_subs_arg(X, u)(cdr(arg), t))
-   ENDIF 
-MEASURE arg BY << 
+%apply_subs_arg(X, u)(arg, (t | ac_app?(t))): RECURSIVE list[term] =
+%   IF null?(arg) THEN (::)
+%   ELSE LET s = subs(X, u)(car(arg)) IN
+%   	    append(term2list_withoutAC(s, ac_sym(t)), apply_subs_arg(X, u)(cdr(arg), t))
+%   ENDIF 
+%MEASURE arg BY << 
 
 %%%%%%%%%% end of useful functions 
 %%%%%%%%%% lemmas related to the auxiliar functions above
@@ -219,22 +219,39 @@ NOT null?(unif_prb_lst) => size_lst(cdr(unif_prb_lst)) < size_lst(unif_prb_lst)
 %%%%%%%%%% end of lemmas related to the auxiliar functions above
 
 %%%%%%%%%%%% lemmas for the AC case %%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-% 
-ac2pair_in_gen_pairs_order1: CONJECTURE
-   ac_app?(t)  
-   => 
-   member(ac2pair(subs(X, u)(t1), ac_sym(t)),
-            gen_pairs_order(apply_subs_arg(X, u)((:t1:), t)))
-
-%
-subs_preserves_member_gen_pairs_order_aux: CONJECTURE
-    ac_app?(t) AND n < length(arg)  AND NOT null?(arg) AND            
-    member(t1, gen_pairs_order_nth(arg, n))
+    
+subs_preserves_member_gen_pairs_order_aux1: CONJECTURE
+    ac_app?(t) AND length(extract_arg(num_arg_fun(t, ac_sym(t)), t)) = 1 AND 
+    member(t1, extract_arg(num_arg_fun(t, ac_sym(t)), t)) AND 
+    NOT (susp?(t1) AND occurs(X, t1) AND ac_app?(u))
     =>
-    member(ac2pair(subs(X, u)(t1), ac_sym(t)),
-            gen_pairs_order(apply_subs_arg(X, u)(arg, t))) 
+    extract_arg(num_arg_fun(subs(X, u)(t), ac_sym(t)), subs(X, u)(t))
+    = (:(subs(X, u)(t1)):)
+
+% aux lemma to the aux lemma below
+subs_preserves_member_gen_pairs_order_aux2_aux: CONJECTURE 
+    ac_app?(t) AND length(extract_arg(num_arg_fun(t, ac_sym(t)), t)) = 1 AND 
+    member(t1, extract_arg(num_arg_fun(t, ac_sym(t)), t)) AND 
+    susp?(t1) AND occurs(X, t1)
+    =>
+    num_arg_fun(subs(X, u)(t), ac_sym(t)) = num_arg_fun(ext(p(t1))(u), ac_sym(t))
+
+% aux lemma to the aux lemma below 
+subs_preserves_member_gen_pairs_order_aux2_aux2: CONJECTURE 
+    ac_app?(t) AND length(extract_arg(num_arg_fun(t, ac_sym(t)), t)) = 1 AND 
+    member(t1, extract_arg(num_arg_fun(t, ac_sym(t)), t)) AND 
+    (susp?(t1) AND occurs(X, t1) AND ac_app?(u))
+    =>
+    extract_arg(n, subs(X, u)(t))
+    = extract_arg(n, ext(p(t1))(u))
+
+subs_preserves_member_gen_pairs_order_aux2: CONJECTURE 
+    ac_app?(t) AND length(extract_arg(num_arg_fun(t, ac_sym(t)), t)) = 1 AND 
+    member(t1, extract_arg(num_arg_fun(t, ac_sym(t)), t)) AND 
+    susp?(t1) AND occurs(X, t1)
+    =>
+    extract_arg(num_arg_fun(subs(X, u)(t), ac_sym(t)), subs(X, u)(t))
+    = extract_arg(num_arg_fun(ext(p(t1))(u), ac_sym(t)), ext(p(t1))(u))
 
 %
 subs_preserves_member_gen_pairs_order: CONJECTURE
@@ -242,7 +259,7 @@ subs_preserves_member_gen_pairs_order: CONJECTURE
     member(t1, gen_pairs_order_nth(extract_arg(num_arg_fun(t, ac_sym(t)), t), n))
     =>
     member(ac2pair(subs(X, u)(t1), ac_sym(t)),
-            gen_pairs_order(extract_arg(num_arg_fun(subs(X, u)(t), ac_sym(t)), t))) 
+            gen_pairs_order(extract_arg(num_arg_fun(subs(X, u)(t), ac_sym(t)), subs(X, u)(t)))) 
 
 
 % aux lemma to terms_in_gen_unif_prb_imp_flat_sub_also_in

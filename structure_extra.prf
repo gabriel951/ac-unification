@@ -114,7 +114,7 @@
     (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
     (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|append| DEF-DECL "list[T]" |list_props| NIL)
-    (|below| TYPE-EQ-DECL NIL |nat_types| NIL) NIL
+    (|below| TYPE-EQ-DECL NIL |nat_types| NIL)
     (|length| DEF-DECL "nat" |list_props| NIL)
     (+ CONST-DECL "[numfield, numfield -> numfield]" |number_fields| NIL)
     (|numfield| NONEMPTY-TYPE-EQ-DECL NIL |number_fields| NIL)
@@ -141,7 +141,7 @@
     (|int_plus_int_is_int| APPLICATION-JUDGEMENT "int" |integers| NIL)
     (|real_ge_is_total_order| NAME-JUDGEMENT "(total_order?[real])"
      |real_props| NIL)
-    NIL NIL NIL (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (AND CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
     (|cons| ADT-CONSTRUCTOR-DECL "[[T, list] -> (cons?)]" |list_adt| NIL)
     (|cons?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
     (|posint_plus_nnint_is_posint| APPLICATION-JUDGEMENT "posint" |integers|
@@ -185,5 +185,42 @@
         (("4" (GRIND) (("4" (REWRITE LENGTH_APPEND) NIL NIL)) NIL)) NIL))
       NIL))
     NIL)
-   NIL SHOSTAK)))
+   NIL SHOSTAK))
+ (|car_append_TCC1| 0
+  (|car_append_TCC1-1| NIL 3763625544 ("" (SUBTYPE-TCC) NIL NIL) NIL NIL))
+ (|car_append_TCC2| 0
+  (|car_append_TCC2-1| NIL 3763625544 ("" (SUBTYPE-TCC) NIL NIL) NIL NIL))
+ (|car_append| 0
+  (|car_append-1| NIL 3763625550
+   ("" (INDUCT "l1")
+    (("1" (GRIND) NIL NIL)
+     ("2" (SKEEP) (("2" (SKEEP) (("2" (GRIND) NIL NIL)) NIL)) NIL)
+     ("3" (GRIND) NIL NIL) ("4" (GRIND) NIL NIL))
+    NIL)
+   ((T FORMAL-TYPE-DECL NIL |structure_extra| NIL)
+    (|list_induction| FORMULA-DECL NIL |list_adt| NIL)
+    (|list| TYPE-DECL NIL |list_adt| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (IMPLIES CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (NOT CONST-DECL "[bool -> bool]" |booleans| NIL)
+    (|null?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
+    (|cons?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
+    (|append| DEF-DECL "list[T]" |list_props| NIL)
+    (|car| ADT-ACCESSOR-DECL "[(cons?) -> T]" |list_adt| NIL)
+    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL))
+   SHOSTAK))
+ (|cons_append| 0
+  (|cons_append-1| NIL 3763626094
+   ("" (INDUCT "l1") (("1" (GRIND) NIL NIL) ("2" (GRIND) NIL NIL)) NIL)
+   ((T FORMAL-TYPE-DECL NIL |structure_extra| NIL)
+    (|list_induction| FORMULA-DECL NIL |list_adt| NIL)
+    (OR CONST-DECL "[bool, bool -> bool]" |booleans| NIL)
+    (|bool| NONEMPTY-TYPE-EQ-DECL NIL |booleans| NIL)
+    (|append| DEF-DECL "list[T]" |list_props| NIL)
+    (|cons?| ADT-RECOGNIZER-DECL "[list -> boolean]" |list_adt| NIL)
+    (= CONST-DECL "[T, T -> boolean]" |equalities| NIL)
+    (|boolean| NONEMPTY-TYPE-DECL NIL |booleans| NIL)
+    (|list| TYPE-DECL NIL |list_adt| NIL))
+   SHOSTAK)))
 
