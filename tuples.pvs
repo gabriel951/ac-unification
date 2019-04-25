@@ -102,30 +102,6 @@ get_args_gt(arg, n): RECURSIVE list[term] =
     ENDIF 
 MEASURE n     
 
-
-% TODO: not used anymore!
-% split first ith terms of a list [t_1, ..., t_k] in position n,
-% the results are accumulated in lists lst_terms1 and lst_terms2.
-% lst_terms1 accumulates the terms t_1, ..., t_n
-% lst_terms2 accumulates the terms t_(n+1), ..., t_i
-% so, in the first call to this function, the list lst_terms1 and lst_terms2 should be null. 
-%split_lst_terms_ith(lst_terms1, lst_terms2, (arg | NOT null?(arg)), (n| n > 0),
-%(i | i > 0 AND i <= length(arg))):
-%RECURSIVE [list[term], list[term]] =
-%   IF i > n THEN split_lst_terms_ith(lst_terms1, cons(nth(arg, i - 1), lst_terms2), arg, n, i - 1)
-%   ELSE IF i = 1 THEN (cons(nth(arg, 0), lst_terms1), lst_terms2)
-%   	ELSE split_lst_terms_ith(cons(nth(arg, i -1), lst_terms1), lst_terms2, arg, n, i - 1)
-%	ENDIF
-%   ENDIF
-%MEASURE i
-
-% TODO: not used anymore
-% split list of terms [t_1, ..., t_k] in position n, returns [l1, l2] where
-% l1 = [t_1, ..., t_n] and l2 = [t_(n+1), ..., t_k]
-%split_lst_terms((arg| NOT null?(arg)), (n | n > 0)): [list[term], list[term]] =
-%   split_lst_terms_ith((::), (::), arg, n, length(arg))
-
-
 % get all pairs formed by t and every term on the list of terms
 get_pairs_aux(t, lst_terms): RECURSIVE list[term] =
    IF null?(lst_terms) THEN (::)
@@ -284,91 +260,336 @@ ac2pair(t, sym): RECURSIVE term =
 MEASURE t BY <<
 
 % get a term and flattens it to a list of terms that do not contain the mentioned AC symbol 
-%term2list_withoutAC(t, sym): RECURSIVE list[term] =
-%    IF ac_app?(t) AND ac_sym(t) = sym THEN extract_arg(num_arg_fun(t, ac_sym(t)), t)
-%    ELSIF pair?(t) THEN append(term2list_withoutAC(term1(t), sym), term2list_withoutAC(term2(t), sym))
-%    ELSE (:t:)
-%    ENDIF 
-%MEASURE t BY <<
+term2list_withoutAC(t, sym): RECURSIVE list[term] =
+    IF ac_app?(t) AND ac_sym(t) = sym THEN extract_arg(num_arg_fun(t, ac_sym(t)), t)
+    ELSIF pair?(t) THEN append(term2list_withoutAC(term1(t), sym), term2list_withoutAC(term2(t), sym))
+    ELSE (:t:)
+    ENDIF 
+MEASURE t BY <<
+
+% select the first nth elements of a list. It start by the last, to match the function extract_args
+select_le_n(arg, n): RECURSIVE list[term] =
+   IF n = 0 OR n > length(arg) THEN (::)
+   ELSE LET nth_elem_lst = (:(nth(arg, n-1)):) IN 
+        append(select_le_n(arg, n-1), nth_elem_lst)
+   ENDIF
+MEASURE n 
+
+list2term(lst_terms): RECURSIVE term =
+   % this should never occur
+   IF null?(lst_terms) THEN unit 
+   ELSIF length(lst_terms) = 1 THEN car(lst_terms)
+   ELSE pair(car(lst_terms), list2term(cdr(lst_terms))) 
+   ENDIF 
+MEASURE lst_terms BY <<
+
+apply_list2term_and_flatten(lst_args): RECURSIVE list[term] =
+   IF null?(lst_args) THEN (::)
+   ELSE cons(list2term(car(lst_args)), apply_list2term_and_flatten(cdr(lst_args)))
+   ENDIF 
+MEASURE lst_args BY << 
+
+%
+ac2pair_in_order(t, sym): RECURSIVE term =
+   IF ac_app?(t) AND ac_sym(t) = sym THEN list2term(extract_arg(num_arg_fun(t, sym), t)) 
+   ELSIF pair?(t) THEN pair(ac2pair_in_order(term1(t), sym), ac2pair_in_order(term2(t), sym)) 
+   ELSE t
+   ENDIF 
+MEASURE t BY <<
+
+ac2pair_any_order(t, sym): RECURSIVE list[term] =
+   IF ac_app?(t) AND ac_sym(t) = sym THEN
+       LET arg = extract_arg(num_arg_fun(t, sym), t),
+           lst_args = gen_args_any_order_nth(arg, length(arg))
+	   IN apply_list2term_and_flatten(lst_args)
+   ELSIF pair?(t) THEN get_pairs(ac2pair_any_order(term1(t), sym), ac2pair_any_order(term2(t), sym))
+   ELSE (:t:)
+   ENDIF 
+MEASURE t BY << 
+
+permutation?(arg1, arg2): RECURSIVE bool =
+   IF null?(arg1) THEN null?(arg2)
+   ELSE IF EXISTS (i:below[length(arg1)]):
+             car(arg1) = nth(arg1, i) AND
+	     permutation?(cdr(arg1), get_args_without_nth(arg2, i+1)) 
+	   THEN TRUE
+	ELSE FALSE
+	ENDIF
+   ENDIF
+MEASURE arg1 BY <<  
 
 %%%%%%%%%%%%%%%%%%%%%%%%% Important lemmas
-% num_arg_fun always return something greater or equal than one
+%%%%%%%%%%%% num_arg_fun and functions must return something greater than one
 num_arg_fun_ge_one: LEMMA 
-    num_arg_fun(t, sym) >= 1
+   num_arg_fun(t, sym) >= 1
 
-% the first element of extract arg is the first of select
+num_arg_fun_select: LEMMA
+   num_arg_fun(select_nth(n)(t, sym), sym) = 1
+   
+num_arg_fun_delete: LEMMA
+   num_arg_fun(t, sym) = 1 OR
+   num_arg_fun(t, sym) = 1 + num_arg_fun(delete_nth(n)(t, sym), sym)
+
+num_arg_fun_delete_unit: LEMMA
+   num_arg_fun(t, sym) = 1 => delete_nth(n)(t, sym) = unit
+   
+delete_unit_num_arg_fun: LEMMA
+   ac_app?(t) AND delete_nth(n)(t, ac_sym(t)) = unit
+   => num_arg_fun(t, ac_sym(t)) = 1                               
+
+extract_arg_ac_ge_one: LEMMA
+   ac_app?(t) => 
+   length(extract_arg(num_arg_fun(t, ac_sym(t)), t)) >= 1
+
+len_term2list_withoutAC_ge_one: LEMMA
+   length(term2list_withoutAC(t, sym)) >= 1 
+
+%%%%%%%%%%% functions related with extract arg, selecth_nth and delete_nth
 car_extract_arg_eq_select_first: LEMMA
     ac_app?(t) AND n > 0 => 
     car(extract_arg(n, t)) = select_nth(1)(t, ac_sym(t))
 
-% soundness of get_args_gt
+select_nth_not_pair_or_acc: LEMMA 
+    s = select_nth(n)(t, sym) => 
+    NOT pair?(s)
+    AND NOT (ac_app?(s) AND ac_sym(s) = sym)
+
+size_select_le_size: LEMMA
+    size(select_nth(n)(t, sym)) <= size(t)
+    
+size_select_lt_size_ac: LEMMA
+    ac_app?(t) => size(select_nth(n)(t, ac_sym(t))) < size(t)  
+
+delete_first_preserves_symbol: LEMMA
+    ac_app?(t) AND ac_app?(s) AND s = delete_nth(1)(t, ac_sym(t))
+    => ac_sym(s) = ac_sym(t)
+    
+delete_first_reduces_size: LEMMA
+    s = delete_nth(n)(t, sym) AND num_arg_fun(t, sym) > 1 
+    => num_arg_fun(t, sym) = num_arg_fun(s, sym) + 1
+
+size_delete_lt_size_ac_aux: LEMMA
+    num_arg_fun(t, sym) > 1 => size(delete_nth(n)(t, sym)) < size(t)
+    
+size_delete_lt_size_ac: LEMMA 
+    ac_app?(t) => size(delete_nth(n)(t, ac_sym(t))) < size(t) 
+
+suf_cond_delete_is_ac: LEMMA 
+    ac_app?(t) AND num_arg_fun(t, ac_sym(t)) > 1
+    => ac_app?(delete_nth(n)(t, ac_sym(t)))
+       AND ac_sym(delete_nth(n)(t, ac_sym(t))) = ac_sym(t)
+    
+extract_arg_ac_eq: LEMMA
+    ac_app?(t) AND ac_app?(ac_arg(t)) AND ac_sym(t) = ac_sym(ac_arg(t)) =>
+    extract_arg(n, t) = extract_arg(n, ac_arg(t))
+
+length_equal_num_arg_fun: LEMMA 
+    ac_app?(t) AND n > 0 => 
+    length(extract_arg(n, t)) = n
+    
+select_nth_n_eq_extract_arg_nth: LEMMA
+    ac_app?(t) AND n <= i AND n > 0 =>  
+    select_nth(n)(t, ac_sym(t)) = nth(extract_arg(i, t), n-1)
+
+select_nth_delete_first_eq_nplusone_aux: LEMMA
+    unit = delete_nth(1)(t, sym) AND num_arg_fun(t, sym) > 1 AND n > 1
+    => unit?(select_nth(n)(t, sym))
+    
+select_nth_delete_first_eq_nplusone: LEMMA 
+    s = delete_nth(1)(t, sym) AND NOT unit?(s)  
+    AND n > 0 AND n <= num_arg_fun(s, sym)  
+    => select_nth(n)(s, sym) = select_nth(n + 1)(t, sym) 
+
+extract_arg_delete_first_get_args_gt: LEMMA
+    ac_app?(t) AND s = delete_nth(1)(t, ac_sym(t))
+    AND ac_app?(s) AND n <= num_arg_fun(s, ac_sym(t)) 
+    => extract_arg(n, s) = cdr(extract_arg(n+1, t))
+
+%%%%%%%%%% lemmas related with get_args_gt and get_args_le
 get_args_gt_is_sound: LEMMA
   arg2 = get_args_gt(append(arg1, arg2), length(arg1))
 
-% sufficient condition for get_args_gt to return a non empty list
+get_args_gt_not_empty: LEMMA
+  n < length(arg) => length(get_args_gt(arg, n)) > 0	
+
+len_get_args_gt: LEMMA
+  IF n > length(arg) THEN length(get_args_gt(arg, n)) = 0
+  ELSE length(get_args_gt(arg, n)) = length(arg) - n
+  ENDIF
+  
 suf_cond_get_args_gt_non_empty: LEMMA
   NOT null?(arg) AND n < length(arg)
   => NOT null?(get_args_gt(arg, n)) 
 
-% soundness of get_args_le
+get_args_gt_append: LEMMA
+   n >= length(arg1)
+   => get_args_gt(append(arg1, arg2), n) = get_args_gt(arg2, n - length(arg1))
+
+get_args_gt_is_full_args: LEMMA
+   arg2 = get_args_gt(append(arg1, arg2), length(arg1))
+   
 get_args_le_is_sound: LEMMA  
   arg1 = get_args_le(append(arg1, arg2), length(arg1))
 
-% a sufficient condition for get_args_le to return a non empty list
 suf_cond_get_args_le_non_empty: LEMMA
   NOT null?(arg) AND n > 0 => NOT null?(get_args_le(arg, n)) 
-  
-% aux lemma for the one below 
+
+len_get_args_le: LEMMA
+  IF n > length(arg) THEN length(get_args_le(arg, n)) = length(arg)
+  ELSE length(get_args_le(arg, n)) = n
+  ENDIF
+
+get_args_le_is_full_args: LEMMA
+   get_args_le(arg, length(arg)) = arg
+
+get_args_le_append: LEMMA
+   n > length(arg1)
+   => get_args_le(append(arg1, arg2), n) = append(arg1, get_args_le(arg2, n - length(arg1)))
+
+get_args_are_sound_aux: LEMMA
+   length(arg) = length(append(get_args_le(arg, n), get_args_gt(arg, n)))
+   
+get_args_are_sound: LEMMA
+   arg = append(get_args_le(arg, n), get_args_gt(arg, n))
+   
+%%%%%%%% lemmas for function get_pairs and combine pairs
 suf_cond_pair_in_get_pairs_aux: LEMMA 
    member(t2, lst_terms2) =>
    member(pair(t1, t2), get_pairs_aux(t1, lst_terms2))
 
-% gives a sufficient condition for a pair to be a member of get_pairs
 suf_cond_pair_in_get_pairs: LEMMA
     member(t1, lst_terms1) AND member(t2, lst_terms2)
     => member(pair(t1, t2), get_pairs(lst_terms1, lst_terms2))
 
-% 
-gen_pairs_nth_implies_gen_pairs_nth_above: CONJECTURE  
-    member(t, gen_pairs_order_nth(arg, n))
-    AND n <= i AND i < length(arg) => 
-    member(t, gen_pairs_order_nth(arg, i))
+nec_cond_pair_in_get_pairs_aux: LEMMA
+    member(pair(t1, t2), get_pairs_aux(s, lst_terms2))
+    => t1 = s AND member(t2, lst_terms2)
+    
+nec_cond_pair_in_get_pairs: LEMMA
+    member(pair(t1, t2), get_pairs(lst_terms1, lst_terms2))
+    => member(t1, lst_terms1) AND member(t2, lst_terms2)
 
-% aux lemma for the one below 
+get_pairs_are_pairs_aux: LEMMA
+    member(t, get_pairs_aux(s, lst_terms2)) => pair?(t)
+    
+get_pairs_are_pairs: LEMMA
+    member(t, get_pairs(lst_terms1, lst_terms2)) => pair?(t)
+
 combine_pairs_is_correct_aux: LEMMA 
     member((t, s), combine_pairs_aux(t, lst_terms2))
     IFF member(s, lst_terms2)
 
-% obvious aux lemma 
 combine_pairs_is_correct_aux2: LEMMA 
     member((t, s), combine_pairs_aux(t1, lst_terms2))
     => t1 = t
     
-%
 combine_pairs_is_correct: LEMMA 
     member((t, s), combine_pairs(lst_terms1, lst_terms2)) IFF
     member(t, lst_terms1)
     AND member(s, lst_terms2)
 
-%
+%%%%%%%%%%%% lemmas related with gen_pairs_order
+gen_pairs_nth_implies_gen_pairs_nth_above: LEMMA  
+    member(t, gen_pairs_order_nth(arg, n))
+    AND n <= i AND i < length(arg) => 
+    member(t, gen_pairs_order_nth(arg, i))
+
 split_membership_gen_unif_prb: LEMMA 
     member((t1, s1), gen_unif_prb(t, s)) IFF
     (member(t1, gen_pairs_order(extract_arg(num_arg_fun(t, ac_sym(t)), t)))
     AND
     member(s1, gen_pairs_any_order(extract_arg(num_arg_fun(s, ac_sym(s)), s))))
 
-% 
-length_equal_num_arg_fun: LEMMA 
-    ac_app?(t) AND n > 0 => 
-    length(extract_arg(n, t)) = n
-
-% gives a sufficient condition for a pair to be in gen_pairs_order, according to
-% term 1 and term 2
-suf_cond_pair_in_gen_pairs_order: CONJECTURE
+suf_cond_pair_in_gen_pairs_order: LEMMA
     member(t1, gen_pairs_order(arg1)) AND member(t2, gen_pairs_order(arg2)) =>
     member(pair(t1, t2), gen_pairs_order(append(arg1, arg2)))
 
 t_in_gen_pairs_order_t: LEMMA 
     member(t, gen_pairs_order((:t:))) 
 
+%%%%%%%%%%%%%  lemmas related with permutation? and add_term_beg_lst_arg and get_args_without_nth
+len_get_args_without_nth: CONJECTURE
+    IF i = 0 OR i > length(arg) THEN length(get_args_without_nth(arg, i)) = length(arg)
+    ELSE length(get_args_without_nth(arg, i)) = length(arg) - 1
+    ENDIF
+    
+permutation?_reflexive: LEMMA
+    permutation?(arg, arg)
+
+permutation?_preserves_length: CONJECTURE
+    permutation?(arg1, arg2) => length(arg1) = length(arg2)
+
+permutation?_transitive_aux: CONJECTURE
+    permutation?(arg1, arg2) =>
+    EXISTS (i:below[length(arg1)]):
+       nth(arg1, i) = car(arg2) AND
+       permutation?(get_args_without_nth(arg1, i+1), cdr(arg2))
+       
+permutation?_transitive: LEMMA
+    permutation?(arg1, arg2) => permutation?(arg2, arg1)
+
+not_null_add_term_beg_lst_arg: LEMMA
+    member(arg, add_term_beg_lst_arg(t, lst_args))
+    => NOT null?(arg) 
+    
+member_add_term_beg_lst_arg: LEMMA
+    NOT null?(arg) AND member(arg, add_term_beg_lst_arg(t, lst_args))
+    => car(arg) = t AND member(cdr(arg), lst_args)
+
+
+%%%%%%%%%%%%%% lemmas related with gen_pairs_any_order
+member_gen_pairs_any_order_aux: LEMMA
+    member(t, apply_gen_pairs_order(lst_args))
+    =>
+    EXISTS arg1:
+       member(arg1, lst_args)
+       AND member(t, gen_pairs_order(arg1))
+ 
+
+gen_args_any_order_nth_produces_permutation: CONJECTURE
+    member(arg1, gen_args_any_order_nth(arg, n))
+    AND n <= length(arg) 
+    => permutation?(arg, arg1)
+
+member_gen_pairs_any_order: CONJECTURE
+    member(t, gen_pairs_any_order(arg)) =>
+    EXISTS arg1:
+       permutation?(arg, arg1) AND member(t, gen_pairs_order(arg1)) 
+
+%%%%%%%%%%%%% lemmas relating ac2pair and term2list_withoutAC
+
+num_arg_fun_eq_length_term2list_withoutAC: LEMMA
+    num_arg_fun(t, sym) = length(term2list_withoutAC(t, sym))
+
+term2list_withoutAC_property1: LEMMA 
+    ac_app?(t) AND num_arg_fun(t, ac_sym(t)) > 1 =>
+    term2list_withoutAC(delete_nth(1)(t, ac_sym(t)), ac_sym(t)) =
+    get_args_gt(term2list_withoutAC(t, ac_sym(t)), 1)
+   
+ac2pair_in_term2list_withoutAC: LEMMA 
+    member(ac2pair(t, sym), gen_pairs_order(term2list_withoutAC(t, sym)))
+
+select_nth_eq_nth_term2list_withoutAC: LEMMA
+    n <= length(term2list_withoutAC(t, sym)) AND n > 0 
+    => 
+    select_nth(n)(t, sym)  =
+    nth(term2list_withoutAC(t, sym), n-1)
+
+
+%%%%%%%%%% aux lemmas for function select_le_n
+select_le_length: LEMMA 
+    n <= length(arg) => length(select_le_n(arg, n)) = n 
+
+select_le_first: LEMMA
+    0 < i AND i <= length(arg) =>
+    nth(select_le_n(arg, i), 0) = nth(arg, 0) 
+
+select_le_get_nth: LEMMA 
+    i <= length(arg) => 
+    FORALL n:
+       n < i => nth(select_le_n(arg, i), n) = nth(arg, n) 
+
+select_le_full_lst: LEMMA
+    select_le_n(arg, length(arg)) = arg
+    
 END tuples
