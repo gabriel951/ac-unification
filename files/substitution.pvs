@@ -1,15 +1,3 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% Authors: Ana Cristina Rocha Oliveira(*)
-%          Mauricio Ayala-Rincon(*)
-%          Maribel Fernandez(**)
-%          (*)Universidade de Brasilia, (**)King's College London
-% Last modified: 27 April 2015
-% This subtheory contains specifications and formalisations
-% of nominal substitution.
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 substitution: THEORY
 BEGIN
 
@@ -36,7 +24,8 @@ subs(X,s)(t): RECURSIVE term =
 	 pair(t1, t2): pair(subs(X,s)(t1), subs(X,s)(t2)),
 	 abs(a, bd): abs(a, subs(X,s)(bd)),
 	 app(f, ag): app(f, subs(X,s)(ag)),
-	 c_app(f, ag): c_app(f, pair(subs(X,s)(term1(ag)), subs(X, s)(term2(ag))))
+	 c_app(f, ag): c_app(f, subs(X,s)(ag)),
+	 ac_app(f, ag): ac_app(f, subs(X, s)(ag))
    ENDCASES
    MEASURE t BY <<
 
@@ -58,7 +47,6 @@ Sub: TYPE = list[[variable, term]]
 Subs(sigma)(t): RECURSIVE term =
    CASES sigma OF
    	 null : t,
-	 % TODO: previously, it was subs(head)(Subs(tail)(t))
 	 cons(head,tail): subs(head)(Subs(tail)(t))
    ENDCASES
    MEASURE sigma BY <<
@@ -90,6 +78,10 @@ Subs_app: LEMMA
 % Substitution over a c_application is a c_application
 Subs_c_app: LEMMA
    Subs(sigma)(c_app(f, pair(t, s))) = c_app(f, Subs(sigma)(pair(t,s)))
+
+% Substitution over an ac_application is an ac_application
+Subs_ac_app: LEMMA
+   Subs(sigma)(ac_app(f, t)) = ac_app(f, Subs(sigma)(t))
    
 % Applying an append of two substitutions to terms is equal 
 % to apply one by one.
@@ -525,5 +517,10 @@ aux_lemma_fresh_sub_aux: LEMMA
 aux_lemma_fresh_sub2: LEMMA 
    fresh_subs(Nabla)(sigma, Delta) AND more_gen_sub?(Nabla)(gamma, sigma) AND idempotent?(gamma) 
    => fresh_subs?(gamma, Delta)`2
+
+
+%%%%%%%%%%%%%%%%%%%%%%% lemmas to prove AC
+ord_pair_susp: LEMMA
+    pair?(subs(X, s)(t)) => susp?(t) OR pair?(t)
 
 END substitution

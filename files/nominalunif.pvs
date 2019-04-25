@@ -1,17 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% Authors: Ana Cristina Rocha Oliveira(*)
-%          Mauricio Ayala-Rincon(*)
-%          Maribel Fernandez(**)
-%          (*)Universidade de Brasilia, (**)King's College London
-% Last modified: 27 April 2015
-% This is the main subtheory of the theory Nominal Unification
-% Here, a functional specification of nominal unification is
-% given and formalised its soundness and correcteness.
-% 
 %                >>>> This is the top theory <<<<
 %
-% Comments reference Definitions, Lemmas and Theorems from the accompaining report
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -140,7 +130,7 @@ ELSE
 	     ac_app(f, ag): IF (NOT ac_app?(s)) OR (f /= ac_sym(s)) THEN (::)
 		            ELSE LET
 			        % generates all possible unification problems to unify AC function symbols
-			       	extra_unif_prb = generate_unif_prb(t, s),		       	    	
+			       	extra_unif_prb = gen_unif_prb(t, s),		       	    	
 			       	% get list of parameters to call the function unify
 				lst_param2call_unify = get_lst_param2call_unify(extra_unif_prb, Delta,
 						       	sigma, cdr(unif_prb_lst), fix_pnt_eq_lst),
@@ -195,7 +185,7 @@ unify_sound_aux_ac_app: LEMMA
                                                                                    fix_pnt2unif_prb(fix_pnt_eq_lst)))),
                                                               size_lst(unif_prb_lst))}):
                                        unify(z1))
-                                    (get_lst_param2call_unify(generate_unif_prb(t,
+                                    (get_lst_param2call_unify(gen_unif_prb(t,
                                                                                 s),
                                                               Delta, sigma,
                                                               cdr(unif_prb_lst),

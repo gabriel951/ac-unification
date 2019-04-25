@@ -1,15 +1,3 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% Authors: Ana Cristina Rocha Oliveira(*)
-%          Mauricio Ayala-Rincon(*)
-%          Maribel Fernandez(**)
-%          (*)Universidade de Brasilia, (**)King's College London
-% Last modified: 27 April 2015
-% This subtheory contains specifications and formalisations
-% of nominal alpha-equivalence.
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 alpha_equivalence: THEORY
 BEGIN
 
@@ -44,7 +32,7 @@ alpha(Delta)(t, s): RECURSIVE bool =
 	 app(sl,ag): app?(s) AND sl=sym(s) AND
 	 	     alpha(Delta)(ag, arg(s)),
 
-	% TODO: commutative function symbols
+	% commutative function symbols
 	c_app(sl, ag): c_app?(s) AND sl = c_sym(s) AND ( 
 		       (alpha(Delta)(term1(ag), term1(c_arg(s))) AND alpha(Delta)(term2(ag), term2(c_arg(s)))) OR
 		       (alpha(Delta)(term1(ag), term2(c_arg(s))) AND alpha(Delta)(term2(ag), term1(c_arg(s))))
