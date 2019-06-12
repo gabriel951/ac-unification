@@ -25,6 +25,12 @@ The theory Nominal Unification consists of pvs files.
   you want to check and use the PVS meta commands x-step-proof (step by
   step) or x-prove.
  
+  
+  * This formalisation also contains work relative to nominal C-unification. To see 
+    our work in nominal C-unification, please check our work "Soundness and
+Completeness of "
+        http://www.mat.unb.br/ayala/publications.html
+
 The contents of the nominal unification library are described below.
 
 atoms.pvs with the implementation of atoms.

@@ -235,8 +235,8 @@ gen_unif_prb(t, s): list[unif_prb_typ] =
         LET % extract arguments of both functions, put them in a list
     	arg_t = extract_arg(num_arg_fun(t, ac_sym(t)), t), 
     	arg_s = extract_arg(num_arg_fun(s, ac_sym(s)), s), 
-    	% generate all pairings of t - they preserve the order
-    	pairs_t_lst = gen_pairs_order(arg_t), 
+    	% generate all pairings of t - they can be in any order
+    	pairs_t_lst = gen_pairs_any_order(arg_t), 
     	% generate all pairing of s - they can be in any order
     	pairs_s_lst = gen_pairs_any_order(arg_s)
     	% combine all pairings of t with all pairings of s, returning a list of all the possibilities  
